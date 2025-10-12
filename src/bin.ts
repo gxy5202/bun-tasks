@@ -1,9 +1,9 @@
 #!/usr/bin/env bun
 
-import { BunParallelCLI } from "./cli";
+import { BunTasksCLI } from "./cli";
 
 async function main(): Promise<void> {
-  const cli = new BunParallelCLI();
+  const cli = new BunTasksCLI();
   const exitCode = await cli.run(process.argv.slice(2));
   process.exit(exitCode);
 }

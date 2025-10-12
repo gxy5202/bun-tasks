@@ -2,7 +2,7 @@
 import { describe, it, expect, beforeEach, afterEach } from "bun:test";
 import fs from "fs";
 import path from "path";
-import { BunParallelCLI } from "../src/cli";
+import { BunTasksCLI } from "../src/cli";
 
 type SpawnCall = { cmd: string[]; stdout?: string; stderr?: string; exitCode: number; mode?: "inherit" | "pipe" };
 
@@ -82,7 +82,7 @@ function restoreExit() {
 	process.exit = origExit as any;
 }
 
-describe("BunParallelCLI basics", () => {
+describe("BunTasksCLI basics", () => {
 	afterEach(() => {
 		restoreSpawn();
 		restoreStdIO();
@@ -90,7 +90,7 @@ describe("BunParallelCLI basics", () => {
 	});
 
 	it("usageText contains ::: and short flags", () => {
-		const text = BunParallelCLI.usageText();
+		const text = BunTasksCLI.usageText();
 		expect(text).toContain(":::");
 		expect(text).toContain("--args, -a");
 		expect(text).toContain("--help, -h");
@@ -98,7 +98,7 @@ describe("BunParallelCLI basics", () => {
 	});
 
 	it("getVersion reads local package.json as fallback", () => {
-		const ver = BunParallelCLI.getVersion();
+		const ver = BunTasksCLI.getVersion();
 		const pkg = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), "package.json"), "utf8"));
 		expect(ver).toBe(pkg.version ?? "unknown");
 	});
@@ -108,7 +108,7 @@ describe("BunParallelCLI basics", () => {
 		// @ts-ignore
 		fs.readFileSync = (() => { throw new Error("fail"); }) as any;
 		try {
-			const ver = BunParallelCLI.getVersion();
+			const ver = BunTasksCLI.getVersion();
 			expect(ver).toBe("unknown");
 		} finally {
 			// @ts-ignore
@@ -117,13 +117,13 @@ describe("BunParallelCLI basics", () => {
 	});
 
 	it("printVersion logs resolved version then exits", () => {
-		const cli = new BunParallelCLI();
+		const cli = new BunTasksCLI();
 		const cap: { code?: number } = {};
 		withMockExit(cap);
-		const origGetVersion = BunParallelCLI.getVersion;
+		const origGetVersion = BunTasksCLI.getVersion;
 		const logs: string[] = [];
 		const origLog = console.log;
-		BunParallelCLI.getVersion = (() => "1.2.3-test") as any;
+		BunTasksCLI.getVersion = (() => "1.2.3-test") as any;
 		console.log = ((...args: any[]) => {
 			logs.push(args.join(" "));
 		}) as any;
@@ -132,13 +132,13 @@ describe("BunParallelCLI basics", () => {
 			expect(cap.code).toBe(0);
 			expect(logs.join(" ")).toContain("1.2.3-test");
 		} finally {
-			BunParallelCLI.getVersion = origGetVersion;
+			BunTasksCLI.getVersion = origGetVersion;
 			console.log = origLog;
 		}
 	});
 
 	it("readPkgScripts returns empty object when package.json cannot be read", () => {
-		const cli = new BunParallelCLI();
+		const cli = new BunTasksCLI();
 		const origRead = fs.readFileSync;
 		// @ts-ignore
 		fs.readFileSync = (() => { throw new Error("fail"); }) as any;
@@ -151,9 +151,9 @@ describe("BunParallelCLI basics", () => {
 	});
 });
 
-describe("BunParallelCLI.parse", () => {
+describe("BunTasksCLI.parse", () => {
 	it("parses global -a and splits by :::", () => {
-		const cli = new BunParallelCLI();
+		const cli = new BunTasksCLI();
 		const res = cli.parse(["-a", "FOO=1 BAR=2", "echo", "hello", ":::", "echo", "world", "-a", "X=9"]);
 		expect(res.globalArgs).toEqual(["FOO=1", "BAR=2"]);
 		expect(res.commandTokenGroups).toEqual([
@@ -163,7 +163,7 @@ describe("BunParallelCLI.parse", () => {
 	});
 
 	it("handles --help and --version (and short forms) by exiting", () => {
-		const cli = new BunParallelCLI();
+		const cli = new BunTasksCLI();
 		// Stub methods to avoid calling process.exit in tests
 		cli.printHelp = (() => { throw new Error("help"); }) as any;
 		cli.printVersion = (() => { throw new Error("version"); }) as any;
@@ -179,7 +179,7 @@ describe("BunParallelCLI.parse", () => {
 	});
 });
 
-describe("BunParallelCLI.run", () => {
+describe("BunTasksCLI.run", () => {
 	beforeEach(() => {
 		mockStdIO();
 	});
@@ -189,14 +189,13 @@ describe("BunParallelCLI.run", () => {
 		restoreSpawn();
 		restoreExit();
 	});
-
 	it("runs external commands with decoded output and custom prefix", async () => {
 			withMockSpawn([
 				{ cmd: ["echo", "hello"], stdout: "hello\n", exitCode: 0 },
 				{ cmd: ["echo", "world"], stdout: "world\n", stderr: "e1\n", exitCode: 0 },
 			]);
 
-		const cli = new BunParallelCLI();
+		const cli = new BunTasksCLI();
 			const code = await cli.run(["echo", "hello", ":::", "echo", "world"], {
 				stdoutPrefix: (i) => `[P${i}]`,
 				mirrorStderrToStdout: true,
@@ -220,7 +219,7 @@ describe("BunParallelCLI.run", () => {
 			} as any;
 		}) as typeof Bun.spawn;
 
-		const cli = new BunParallelCLI();
+		const cli = new BunTasksCLI();
 		// Mock scripts so that 'build' is recognized as a package script
 		cli.readPkgScripts = () => ({ build: "echo building" });
 		const code = await cli.run([
@@ -242,7 +241,7 @@ describe("BunParallelCLI.run", () => {
 			{ cmd: ["echo", "ok"], mode: "inherit", exitCode: 0 },
 			{ cmd: ["echo", "bad"], mode: "inherit", exitCode: 2 },
 		]);
-		const cli = new BunParallelCLI();
+		const cli = new BunTasksCLI();
 		const cap: { code?: number } = {};
 		withMockExit(cap);
 		await expect(cli.run(["echo", "ok", ":::", "echo", "bad"])).rejects.toThrow(
@@ -252,7 +251,7 @@ describe("BunParallelCLI.run", () => {
 	});
 
 		it("prints help and exits when no commands provided", async () => {
-			const cli = new BunParallelCLI();
+			const cli = new BunTasksCLI();
 			const cap: { code?: number } = {};
 			withMockExit(cap);
 			const logs: string[] = [];

@@ -1,10 +1,10 @@
 {
-  "name": "bun-parallel",
+  "name": "bun-tasks",
   "version": "0.1.1",
   "description": "A parallel task runner for the Bun runtime inspired by concurrently",
   "type": "module",
   "bin": {
-    "bun-parallel": "./dist/bin.js"
+    "bun-tasks": "./dist/bin.js"
   },
   "exports": {
     ".": {
@@ -32,10 +32,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gxy5202/bun-parallel"
+    "url": "https://github.com/gxy5202/bun-tasks"
   },
   "bugs": {
-    "url": "https://github.com/gxy5202/bun-parallel/issues"
+    "url": "https://github.com/gxy5202/bun-tasks/issues"
   },
   "dependencies": {
     "chalk": "^5.3.0"

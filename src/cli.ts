@@ -22,13 +22,13 @@ type SpawnOptionsCompat = {
   stderr?: "pipe" | "inherit" | "ignore";
 };
 
-export class BunParallelCLI {
+export class BunTasksCLI {
   static getVersion(): string {
     try {
       const pkgPath: string = path.resolve(
         process.cwd(),
         "node_modules",
-        "bun-parallel",
+  "bun-tasks",
         "package.json"
       );
       const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8")) as { version?: string };
@@ -47,10 +47,10 @@ export class BunParallelCLI {
 
   static usageText(): string {
     return `
-${chalk.bold("bun-parallel")} - Run multiple bun commands in parallel
+${chalk.bold("bun-tasks")} - Run multiple bun commands in parallel
 
 ${chalk.bold("Usage:")}
-  bun-parallel [--args|-a key=value] <cmd1> ::: <cmd2> ::: ...
+  bun-tasks [--args|-a key=value] <cmd1> ::: <cmd2> ::: ...
 
 ${chalk.bold("Options:")}
   --args, -a <key=value>   Global args passed to all commands
@@ -60,23 +60,23 @@ ${chalk.bold("Options:")}
 ${chalk.bold("Per-command args:")}
   You can add --args after a specific command to override global args
   Example:
-    bun-parallel --args NODE_ENV=dev dev -a DEBUG=true ::: serve
+    bun-tasks --args NODE_ENV=dev dev -a DEBUG=true ::: serve
 
 ${chalk.bold("Examples:")}
-  bun-parallel dev ::: serve
-  bun-parallel bun run dev ::: bun run serve
-  bun-parallel --args NODE_ENV=dev dev ::: serve
-  bun-parallel --args NODE_ENV=dev dev --args DEBUG=true ::: serve
+  bun-tasks dev ::: serve
+  bun-tasks bun run dev ::: bun run serve
+  bun-tasks --args NODE_ENV=dev dev ::: serve
+  bun-tasks --args NODE_ENV=dev dev --args DEBUG=true ::: serve
 `;
   }
 
   printHelp(): never {
-    console.log(BunParallelCLI.usageText());
+  console.log(BunTasksCLI.usageText());
     process.exit(0);
   }
 
   printVersion(): never {
-    console.log(BunParallelCLI.getVersion());
+  console.log(BunTasksCLI.getVersion());
     process.exit(0);
   }
 

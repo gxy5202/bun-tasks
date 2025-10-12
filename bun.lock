@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "bun-parallel",
+  "name": "bun-tasks",
       "dependencies": {
         "chalk": "^5.3.0",
       },
