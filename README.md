@@ -5,7 +5,7 @@
 ## Installation
 
 ```bash
-bun add bun-parallel
+bun add -D bun-parallel
 ```
 
 > **Prerequisite:** Bun must be available in your environment; install it from the official docs if `bun --version` fails.
@@ -28,15 +28,10 @@ Define the referenced scripts as usual:
 {
   "scripts": {
     "api": "bun run src/api.ts",
-    "docs": "bun run docs:watch"
+    "docs": "bun run docs:watch",
+    "dev": "bun-parallel api ::: docs"
   }
 }
-```
-
-Run everything in parallel:
-
-```bash
-bun run dev
 ```
 
 ## Command syntax
@@ -89,6 +84,10 @@ bun test --coverage
 ```
 
 On Windows, Bun coverage reporting is experimental; if it fails you can temporarily drop the `--coverage` flag while the upstream feature matures.
+
+## Acknowledgements
+
+Portions of the codebase were authored with assistance from GPT-5-Codex.
 
 ## License
 
