@@ -6,15 +6,15 @@
     "outDir": "dist",
     "rootDir": "src",
     "declaration": true,
-    "declarationMap": true,
+    "declarationMap": false,
     "sourceMap": false,
     "stripInternal": false,
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["node", "bun-types"]
+    "types": ["node", "bun", "chalk"]
   },
-  "include": ["src/**/*.ts", "types/**/*.d.ts"],
+  "include": ["src/*.ts"],
   "exclude": ["dist"]
 }
