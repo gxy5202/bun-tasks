@@ -1,0 +1,49 @@
+{
+  "name": "bun-parallel",
+  "version": "0.1.1",
+  "description": "A parallel task runner for the Bun runtime inspired by concurrently",
+  "type": "module",
+  "bin": {
+    "bun-parallel": "./dist/bin.js"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/cli.js",
+      "types": "./dist/cli.d.ts"
+    }
+  },
+  "main": "dist/cli.js",
+  "types": "dist/cli.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "rimraf dist && tsgo -p tsconfig.json",
+    "test": "bun test --coverage"
+  },
+  "keywords": [
+    "bun",
+    "parallel",
+    "tasks",
+    "runner"
+  ],
+  "author": "Gomi",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gxy5202/bun-parallel"
+  },
+  "bugs": {
+    "url": "https://github.com/gxy5202/bun-parallel/issues"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "bun-types": "^1.0.12",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.6.3"
+  }
+}
