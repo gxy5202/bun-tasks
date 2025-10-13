@@ -17,7 +17,7 @@ Register a script in `package.json` that fans out to multiple commands:
 ```json
 {
   "scripts": {
-  "dev": "bun-tasks --args NODE_ENV=dev api ::: docs --args PORT=4000"
+    "dev": "bun-tasks --args NODE_ENV=dev api ::: docs --args PORT=4000"
   }
 }
 ```
@@ -29,7 +29,7 @@ Define the referenced scripts as usual:
   "scripts": {
     "api": "bun run src/api.ts",
     "docs": "bun run docs:watch",
-  "dev": "bun-tasks api ::: docs"
+    "dev": "bun-tasks api ::: docs"
   }
 }
 ```
@@ -59,6 +59,7 @@ bun-tasks -a API_URL=https://api.dev api ::: queue --args QUEUE=media -a PORT=40
 - `--help`, `-h` &mdash; display usage information.
 - `--version`, `-v` &mdash; show the published version resolved from `package.json`.
 - `--args`, `-a` &mdash; attach key/value pairs as described above.
+- `--raw`, `-r` &mdash; bypass piping and preserve the child process's native output (useful for Parcel progress bars).
 
 ## Programmatic usage
 

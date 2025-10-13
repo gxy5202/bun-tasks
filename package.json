@@ -1,6 +1,6 @@
 {
   "name": "bun-tasks",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A parallel task runner for the Bun runtime inspired by concurrently",
   "type": "module",
   "bin": {

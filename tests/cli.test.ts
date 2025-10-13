@@ -160,6 +160,7 @@ describe("BunTasksCLI.parse", () => {
 			["echo", "hello"],
 			["echo", "world", "-a", "X=9"],
 		]);
+		expect(res.rawOutput).toBe(false);
 	});
 
 	it("handles --help and --version (and short forms) by exiting", () => {
@@ -176,6 +177,28 @@ describe("BunTasksCLI.parse", () => {
 			.toThrow("version");
 		expect(() => cli.parse(["-v"]))
 			.toThrow("version");
+	});
+
+	it("enables raw output when --raw is passed", async () => {
+		const cli = new BunTasksCLI();
+		const calls: Array<{ stdout: unknown; stderr: unknown }> = [];
+		const originalSpawn = Bun.spawn;
+		try {
+			Bun.spawn = ((opts: any) => {
+				calls.push({ stdout: opts.stdout, stderr: opts.stderr });
+				return {
+					stdout: 1,
+					stderr: 2,
+					exited: Promise.resolve(0),
+				} as any;
+			}) as typeof Bun.spawn;
+
+			await cli.run(["--raw", "parcel", "build"]);
+			expect(calls[0].stdout).toBe("inherit");
+			expect(calls[0].stderr).toBe("inherit");
+		} finally {
+			Bun.spawn = originalSpawn;
+		}
 	});
 });
 
