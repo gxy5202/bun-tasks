@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
 import type { Subprocess } from "bun";
-import chalk from "chalk";
+import { bold, cyan } from "./color";
 import fs from "fs";
 import path from "path";
 
@@ -51,23 +51,23 @@ export class BunTasksCLI {
 
   static usageText(): string {
     return `
-${chalk.bold("bun-tasks")} - Run multiple bun commands in parallel
+${bold("bun-tasks")} - Run multiple bun commands in parallel
 
-${chalk.bold("Usage:")}
+${bold("Usage:")}
   bun-tasks [--args|-a key=value] <cmd1> ::: <cmd2> ::: ...
 
-${chalk.bold("Options:")}
+${bold("Options:")}
   --args, -a <key=value>   Global args passed to all commands
   --version, -v            Show version
   --help, -h               Show this help message
   --raw, -r                Stream child output directly (preserves native progress)
 
-${chalk.bold("Per-command args:")}
+${bold("Per-command args:")}
   You can add --args after a specific command to override global args
   Example:
     bun-tasks --args NODE_ENV=dev dev -a DEBUG=true ::: serve
 
-${chalk.bold("Examples:")}
+${bold("Examples:")}
   bun-tasks dev ::: serve
   bun-tasks bun run dev ::: bun run serve
   bun-tasks --args NODE_ENV=dev dev ::: serve
@@ -207,7 +207,7 @@ ${chalk.bold("Examples:")}
 
       const prefix: string = options.stdoutPrefix
         ? options.stdoutPrefix(idx)
-        : chalk.cyan(`[${idx + 1}]`);
+        : cyan(`[${idx + 1}]`);
 
       // Use TextDecoder to convert Uint8Array chunks to string
       const stdoutDecoder = new TextDecoder();
