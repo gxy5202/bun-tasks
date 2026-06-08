@@ -2,6 +2,9 @@
 
 import { BunTasksCLI } from "./cli";
 
+export { BunTasksCLI };
+export type { ParsedInput, RunOptions } from "./cli";
+
 async function main(): Promise<void> {
   const cli = new BunTasksCLI();
   const exitCode = await cli.run(process.argv.slice(2));
